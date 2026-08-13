@@ -1,0 +1,33 @@
+.sidebar {
+  width: 200px;
+  flex-shrink: 0;
+}
+
+.menuList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menuItem {
+  margin-bottom: 8px;
+}
+
+.menuLink {
+  display: block;
+  padding: 10px 16px;
+  border-radius: 4px;
+  text-decoration: none;
+  background-color: #ffa31a;
+  color: #292929;
+  font-size: 1rem;
+  font-weight: 500;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.menuLink:hover {
+  background-color: #292929;
+  color: #ffa31a;
+}
