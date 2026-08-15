@@ -1,10 +1,12 @@
 'use client';
 
+import { useEffect } from 'react'; 
 import { useRouter } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { createNote } from '@/lib/api/clientApi';
+import { useNoteStore } from '@/lib/store/noteStore';
 import type { NoteTag } from '@/types/note';
 import css from './NoteForm.module.css';
 
@@ -34,32 +36,37 @@ interface NoteFormValues {
 export default function NoteForm() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { draft, clearDraft } = useNoteStore(); 
 
   const mutation = useMutation({
     mutationFn: createNote,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notes'] });
+      clearDraft();
       router.push('/notes/filter/all');
     },
   });
 
   const initialValues: NoteFormValues = {
-    title: '',
-    content: '',
-    tag: 'Todo',
+    title: draft.title, 
+    content: draft.content, 
+    tag: (draft.tag as NoteTag) || 'Todo', 
   };
 
   return (
     <Formik
       initialValues={initialValues}
+      enableReinitialize={true}
       validationSchema={NoteSchema}
       onSubmit={async (values, { setSubmitting }) => {
         await mutation.mutateAsync(values);
         setSubmitting(false);
       }}
     >
-      {({ isSubmitting }) => (
+      {({ values, isSubmitting }) => ( 
         <Form className={css.form}>
+          <DraftAutoSave values={values} /> {}
+
           <div className={css.formGroup}>
             <label htmlFor="title">Title</label>
             <Field
@@ -132,4 +139,15 @@ export default function NoteForm() {
       )}
     </Formik>
   );
+}
+
+
+function DraftAutoSave({ values }: { values: NoteFormValues }) {
+  const { setDraft } = useNoteStore();
+
+  useEffect(() => {
+    setDraft(values);
+  }, [values, setDraft]);
+
+  return null;
 }
