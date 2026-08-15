@@ -52,7 +52,7 @@ export default function SignUpForm() {
       </div>
       <div className={css.actions}>
         <button type="submit" className={css.submitButton}>
-          Sign Up
+          Register
         </button>
       </div>
     </form>
