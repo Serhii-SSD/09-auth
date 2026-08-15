@@ -2,36 +2,36 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 24px;
   background-color: #292929;
-  padding: 32px;
-  border-radius: 8px;
   border: 1px solid #ffa31a;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-.title {
-  font-size: 28px;
-  font-weight: 700;
-  color: #ffa31a;
-  margin: 0 0 8px 0;
+.formTitle {
+  font-size: 24px;
+  font-weight: 600;
   text-align: center;
+  margin-bottom: 8px;
+  color: #ffa31a;
 }
 
 .formGroup {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-}
-
-.formGroup label {
   font-size: 14px;
   font-weight: 500;
   color: #ffa31a;
 }
 
 .input {
-  padding: 10px 12px;
-  font-size: 16px;
-  border: 1px solid #ced4da;
+  margin-top: 4px;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ffa31a;
   border-radius: 4px;
   background-color: #1b1b1b;
   color: #ffffff;
@@ -39,18 +39,23 @@
 
 .input:focus {
   outline: none;
-  border-color: #ffa31a;
+  border-color: #ffa500;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
 .submitButton {
-  padding: 10px 16px;
+  padding: 8px 16px;
   font-size: 16px;
   background-color: #ffa31a;
   color: #292929;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-weight: 600;
   transition: background-color 0.2s ease;
 }
 
@@ -58,8 +63,14 @@
   background-color: #ffffff;
 }
 
+.submitButton:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
 .error {
   color: #dc3545;
-  font-size: 14px;
+  font-size: 12px;
+  margin-top: 4px;
   text-align: center;
 }

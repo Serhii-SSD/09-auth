@@ -1,3 +1,30 @@
+<!-- Було:
+const parsed = parse(cookieStr);
+
+const options = {
+ expires: parsed.Expires ? new Date(parsed.Expires) : undefined,
+ path: parsed.Path,
+ maxAge: Number(parsed['Max-Age']),
+};
+
+if (parsed.accessToken) {
+ cookieStore.set('accessToken', parsed.accessToken, options);
+}
+
+if (parsed.refreshToken) {
+ cookieStore.set('refreshToken', parsed.refreshToken, options);
+}
+
+Стало:
+const parsed = parseSetCookie(cookieStr);
+
+if (parsed.value) {
+ cookieStore.set(parsed.name, parsed.value, parsed);
+}
+
+
+ -->
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

@@ -25,7 +25,7 @@ export default function SignUpForm() {
 
   return (
     <form onSubmit={handleSubmit} className={css.form}>
-      <h1 className={css.title}>Sign Up</h1>
+      <h1 className={css.formTitle}>Sign Up</h1>
       {error && <p className={css.error}>{error}</p>}
       <div className={css.formGroup}>
         <label htmlFor="email">Email</label>
@@ -50,9 +50,11 @@ export default function SignUpForm() {
           className={css.input}
         />
       </div>
-      <button type="submit" className={css.submitButton}>
-        Sign Up
-      </button>
+      <div className={css.actions}>
+        <button type="submit" className={css.submitButton}>
+          Sign Up
+        </button>
+      </div>
     </form>
   );
 }

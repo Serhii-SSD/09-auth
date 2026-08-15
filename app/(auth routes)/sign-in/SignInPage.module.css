@@ -1,3 +1,7 @@
+.mainContent {
+  flex: 1;
+}
+/* 
 .form {
   display: flex;
   flex-direction: column;
@@ -63,9 +67,14 @@
   background-color: #ffffff;
 }
 
+.submitButton:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
 .error {
   color: #dc3545;
   font-size: 12px;
   margin-top: 4px;
   text-align: center;
-}
+} */

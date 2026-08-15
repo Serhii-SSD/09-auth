@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import SignUpForm from '@/components/SignUpForm/SignUpForm';
+import css from './SignUpPage.module.css';
 
 export const metadata: Metadata = {
   title: 'Sign Up | NoteHub',
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function SignUpPage() {
-  return <SignUpForm />;
+  return (
+    <main className={css.mainContent}>
+      <SignUpForm />
+    </main>
+  );
 }

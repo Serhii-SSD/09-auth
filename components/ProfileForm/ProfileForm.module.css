@@ -1,66 +1,97 @@
-.form {
+.container {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 16px;
-  max-width: 500px;
-  margin: 0 auto;
-  background-color: #292929;
-  padding: 32px;
-  border-radius: 8px;
-  border: 1px solid #ffa31a;
 }
 
-.title {
-  font-size: 28px;
+.formTitle {
+  font-size: 32px;
   font-weight: 700;
   color: #ffa31a;
   margin: 0 0 8px 0;
   text-align: center;
 }
 
+.avatarWrapper {
+  display: flex;
+  height: 200px;
+  width: 200px;
+  justify-content: center;
+}
+
+.avatar {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #ffa31a;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
 .formGroup {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  width: 100%;
 }
 
 .formGroup label {
-  font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
+  margin-bottom: 8px;
   color: #ffa31a;
 }
 
 .input {
   padding: 10px 12px;
   font-size: 16px;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
+  border: 1.5px solid #ffa31a;
+  border-radius: 8px;
+  outline-offset: 2px;
+  transition: border-color 0.2s ease;
   background-color: #1b1b1b;
   color: #ffffff;
 }
 
 .input:focus {
+  border-color: #ffa500;
   outline: none;
-  border-color: #ffa31a;
 }
 
-.submitButton {
-  padding: 10px 16px;
-  font-size: 16px;
+.input::placeholder {
+  color: #808080;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.saveButton {
+  padding: 12px 24px;
+  font-size: 18px;
+  font-weight: 600;
   background-color: #ffa31a;
   color: #292929;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.3s ease;
+  align-self: stretch;
+  text-align: center;
 }
 
-.submitButton:hover {
+.saveButton:hover {
   background-color: #ffffff;
 }
 
-.submitButton:disabled {
+.saveButton:disabled {
   background-color: #6c757d;
   cursor: not-allowed;
 }

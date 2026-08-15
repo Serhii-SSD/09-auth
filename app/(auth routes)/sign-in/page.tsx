@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import SignInForm from '@/components/SignInForm/SignInForm';
+import css from './SignInPage.module.css';
 
 export const metadata: Metadata = {
   title: 'Sign In | NoteHub',
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function SignInPage() {
-  return <SignInForm />;
+  return (
+    <main className={css.mainContent}>
+      <SignInForm />
+    </main>
+  );
 }
