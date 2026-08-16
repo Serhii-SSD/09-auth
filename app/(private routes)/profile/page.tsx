@@ -1,18 +1,21 @@
-'use client';
-
+import type { Metadata } from 'next';
+import { cookies } from 'next/headers';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useAuthStore } from '@/lib/store/authStore';
-import css from './ProfilePage.module.css';
+import { getMe } from '@/lib/api/serverApi';
+import css from './page.module.css';
 
 const DEFAULT_AVATAR = 'https://ac.goit.global/fullstack/react/default-avatar.jpg';
 
-export default function ProfilePage() {
-  const user = useAuthStore((state) => state.user);
+export const metadata: Metadata = {
+  title: 'Profile | NoteHub',
+  description: 'View and manage your NoteHub profile',
+};
 
-  if (!user) {
-    return <p style={{ color: '#ffa31a' }}>Loading profile...</p>;
-  }
+export default async function ProfilePage() {
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore.toString();
+  const user = await getMe(cookieHeader);
 
   return (
     <main className={css.mainContent}>

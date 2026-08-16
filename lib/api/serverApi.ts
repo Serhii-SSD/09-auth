@@ -1,8 +1,6 @@
-import axios from 'axios';
-import type { Note  } from '@/types/note';
+import { api } from './api';
+import type { Note } from '@/types/note';
 import type { User } from '@/types/user';
-
-const baseURL = process.env.NEXT_PUBLIC_API_URL + '/api';
 
 export interface FetchNotesResponse {
   notes: Note[];
@@ -21,7 +19,7 @@ export const fetchNotes = async (
   params: FetchNotesParams,
   cookieHeader: string
 ): Promise<FetchNotesResponse> => {
-  const { data } = await axios.get<FetchNotesResponse>(`${baseURL}/notes`, {
+  const { data } = await api.get<FetchNotesResponse>('/notes', {
     params,
     headers: { Cookie: cookieHeader },
   });
@@ -32,14 +30,12 @@ export const fetchNoteById = async (
   id: string,
   cookieHeader: string
 ): Promise<Note> => {
-  const { data } = await axios.get<Note>(`${baseURL}/notes/${id}`, {
+  const { data } = await api.get<Note>(`/notes/${id}`, {
     headers: { Cookie: cookieHeader },
   });
   return data;
 };
 
-// ========== AUTH (server) ==========
-// Оновлений serverApi.ts
 export interface SessionResponse {
   success: boolean;
   setCookieHeader?: string | string[];
@@ -47,33 +43,22 @@ export interface SessionResponse {
 
 export const checkSession = async (cookieHeader: string): Promise<SessionResponse> => {
   try {
-    const response = await axios.get(`${baseURL}/auth/session`, {
+    const response = await api.get('/auth/session', {
       headers: { Cookie: cookieHeader },
     });
-    
+
     return {
       success: response.data.success === true,
-      setCookieHeader: response.headers['set-cookie'], 
+      setCookieHeader: response.headers['set-cookie'],
     };
   } catch {
     return { success: false };
   }
 };
 
-// export const checkSession = async (cookieHeader: string): Promise<boolean> => {
-//   try {
-//     const { data } = await axios.get(`${baseURL}/auth/session`, {
-//       headers: { Cookie: cookieHeader },
-//     });
-//     return data.success === true;
-//   } catch {
-//     return false;
-//   }
-// };
-
 // ========== USERS (server) ==========
 export const getMe = async (cookieHeader: string): Promise<User> => {
-  const { data } = await axios.get<User>(`${baseURL}/users/me`, {
+  const { data } = await api.get<User>('/users/me', {
     headers: { Cookie: cookieHeader },
   });
   return data;

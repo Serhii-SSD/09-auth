@@ -39,7 +39,7 @@ export async function proxy(request: NextRequest) {
 
         if (updatedAccessToken) {
           if (isPublicRoute) {
-            return NextResponse.redirect(new URL('/notes/filter/all', request.url), {
+            return NextResponse.redirect(new URL('/', request.url), {
               headers: {
                 'Set-Cookie': cookieStore.toString(), 
               },
@@ -66,7 +66,7 @@ export async function proxy(request: NextRequest) {
   }
 
   if (isPublicRoute) {
-    return NextResponse.redirect(new URL('/notes/filter/all', request.url));
+    return NextResponse.redirect(new URL('/', request.url));
   }
   if (isPrivateRoute) {
     return NextResponse.next();
