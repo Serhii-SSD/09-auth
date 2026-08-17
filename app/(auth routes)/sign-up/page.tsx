@@ -3,10 +3,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { register } from '@/lib/api/clientApi';
+import { useAuthStore } from '@/lib/store/authStore';
 import css from './page.module.css';
 
 export default function SignUpPage() {
   const router = useRouter();
+  const setUser = useAuthStore((state) => state.setUser);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -15,8 +17,9 @@ export default function SignUpPage() {
     e.preventDefault();
     setError('');
     try {
-      await register(email, password);
-      router.push('/');
+      const user = await register(email, password);
+      setUser(user);
+      router.push('/profile');
     } catch {
       setError('Registration failed. User may already exist.');
     }

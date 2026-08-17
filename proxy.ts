@@ -17,7 +17,7 @@ export async function proxy(request: NextRequest) {
 
   if (!accessToken) {
     if (refreshToken) {
-      const responseAxios = await checkSession(cookieStore.toString());
+      const responseAxios = await checkSession();
 
       if (responseAxios.status === 200 && responseAxios.data?.success) {
         const setCookie = responseAxios.headers['set-cookie'];

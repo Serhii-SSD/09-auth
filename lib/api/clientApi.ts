@@ -1,11 +1,6 @@
-import axios from 'axios';
+import { api } from './api'; 
 import type { User } from '@/types/user';
 import type { Note, NoteTag } from '@/types/note';
-
-const api = axios.create({
-  baseURL: '/api',
-  withCredentials: true,
-});
 
 // Auth
 export const login = async (email: string, password: string): Promise<User> => {
