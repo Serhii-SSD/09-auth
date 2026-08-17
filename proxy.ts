@@ -1,5 +1,3 @@
-
-
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { parseSetCookie } from 'cookie'; 
@@ -19,10 +17,10 @@ export async function proxy(request: NextRequest) {
 
   if (!accessToken) {
     if (refreshToken) {
-      const session = await checkSession(cookieStore.toString());
+      const responseAxios = await checkSession(cookieStore.toString());
 
-      if (session.success) {
-        const setCookie = session.setCookieHeader;
+      if (responseAxios.status === 200 && responseAxios.data?.success) {
+        const setCookie = responseAxios.headers['set-cookie'];
 
         if (setCookie) {
           const cookieArray = Array.isArray(setCookie) ? setCookie : [setCookie];
@@ -39,19 +37,33 @@ export async function proxy(request: NextRequest) {
 
         if (updatedAccessToken) {
           if (isPublicRoute) {
-            return NextResponse.redirect(new URL('/', request.url), {
-              headers: {
-                'Set-Cookie': cookieStore.toString(), 
-              },
-            });
+            const response = NextResponse.redirect(new URL('/', request.url));
+            
+            if (setCookie) {
+              const cookieArray = Array.isArray(setCookie) ? setCookie : [setCookie];
+              for (const cookieStr of cookieArray) {
+                response.headers.append('Set-Cookie', cookieStr);
+              }
+            }
+            
+            return response;
           }
 
           if (isPrivateRoute) {
-            return NextResponse.next({
+            const response = NextResponse.next({
               headers: {
                 Cookie: cookieStore.toString(),
               },
             });
+
+            if (setCookie) {
+              const cookieArray = Array.isArray(setCookie) ? setCookie : [setCookie];
+              for (const cookieStr of cookieArray) {
+                response.headers.append('Set-Cookie', cookieStr);
+              }
+            }
+
+            return response;
           }
         }
       }
@@ -76,31 +88,3 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: ['/notes/:path*', '/profile/:path*', '/sign-in', '/sign-up'],
 };
-
-
-// import { NextResponse } from 'next/server';
-// import type { NextRequest } from 'next/server';
-
-// export function proxy(request: NextRequest) {
-//   const token = request.cookies.get('accessToken')?.value;
-//   const { pathname } = request.nextUrl;
-
-//   const isAuthRoute =
-//     pathname === '/sign-in' || pathname === '/sign-up';
-//   const isPrivateRoute =
-//     pathname.startsWith('/notes') || pathname.startsWith('/profile');
-
-//   if (!token && isPrivateRoute) {
-//     return NextResponse.redirect(new URL('/sign-in', request.url));
-//   }
-
-//   if (token && isAuthRoute) {
-//     return NextResponse.redirect(new URL('/notes/filter/all', request.url));
-//   }
-
-//   return NextResponse.next();
-// }
-
-// export const config = {
-//   matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
-// };

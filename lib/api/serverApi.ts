@@ -1,4 +1,5 @@
 import { api } from './api';
+import type { AxiosResponse } from 'axios';
 import type { Note } from '@/types/note';
 import type { User } from '@/types/user';
 
@@ -12,6 +13,10 @@ export interface FetchNotesParams {
   perPage?: number;
   search?: string;
   tag?: string;
+}
+
+export interface CheckSessionData {
+  success: boolean;
 }
 
 // ========== NOTES (server) ==========
@@ -36,23 +41,21 @@ export const fetchNoteById = async (
   return data;
 };
 
-export interface SessionResponse {
-  success: boolean;
-  setCookieHeader?: string | string[];
-}
-
-export const checkSession = async (cookieHeader: string): Promise<SessionResponse> => {
+// ========== AUTH (server) ==========
+export const checkSession = async (cookieHeader: string): Promise<AxiosResponse<CheckSessionData>> => {
   try {
-    const response = await api.get('/auth/session', {
+    const response = await api.get<CheckSessionData>('/auth/session', {
       headers: { Cookie: cookieHeader },
     });
-
-    return {
-      success: response.data.success === true,
-      setCookieHeader: response.headers['set-cookie'],
-    };
-  } catch {
-    return { success: false };
+    return response;
+  } catch (error: unknown) {
+    if (error && typeof error === 'object' && 'response' in error) {
+      const axiosError = error as { response: AxiosResponse<CheckSessionData> };
+      if (axiosError.response) {
+        return axiosError.response;
+      }
+    }
+    throw error;
   }
 };
 
