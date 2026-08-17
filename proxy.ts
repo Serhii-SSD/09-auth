@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { parseSetCookie } from 'cookie'; 
-import { checkSession } from './lib/api/serverApi'; 
+import { parseSetCookie } from 'cookie';
+import { checkSession } from './lib/api/serverApi';
 
 const privateRoutes = ['/notes', '/profile'];
 const publicRoutes = ['/sign-in', '/sign-up'];
@@ -18,7 +18,7 @@ export async function proxy(request: NextRequest) {
   if (!accessToken) {
     if (refreshToken) {
       const responseAxios = await checkSession();
-
+      
       if (responseAxios.status === 200 && responseAxios.data?.success) {
         const setCookie = responseAxios.headers['set-cookie'];
 
@@ -33,38 +33,33 @@ export async function proxy(request: NextRequest) {
           }
         }
 
-        const updatedAccessToken = cookieStore.get('accessToken')?.value;
-
-        if (updatedAccessToken) {
-          if (isPublicRoute) {
-            const response = NextResponse.redirect(new URL('/', request.url));
-            
-            if (setCookie) {
-              const cookieArray = Array.isArray(setCookie) ? setCookie : [setCookie];
-              for (const cookieStr of cookieArray) {
-                response.headers.append('Set-Cookie', cookieStr);
-              }
+        if (isPublicRoute) {
+          const response = NextResponse.redirect(new URL('/', request.url));
+          
+          if (setCookie) {
+            const cookieArray = Array.isArray(setCookie) ? setCookie : [setCookie];
+            for (const cookieStr of cookieArray) {
+              response.headers.append('Set-Cookie', cookieStr);
             }
-            
-            return response;
           }
+          return response;
+        }
 
-          if (isPrivateRoute) {
-            const response = NextResponse.next({
-              headers: {
-                Cookie: cookieStore.toString(),
-              },
-            });
+       
+        if (isPrivateRoute) {
+          const response = NextResponse.next({
+            headers: {
+              Cookie: cookieStore.toString(), 
+            },
+          });
 
-            if (setCookie) {
-              const cookieArray = Array.isArray(setCookie) ? setCookie : [setCookie];
-              for (const cookieStr of cookieArray) {
-                response.headers.append('Set-Cookie', cookieStr);
-              }
+          if (setCookie) {
+            const cookieArray = Array.isArray(setCookie) ? setCookie : [setCookie];
+            for (const cookieStr of cookieArray) {
+              response.headers.append('Set-Cookie', cookieStr);
             }
-
-            return response;
           }
+          return response;
         }
       }
     }
@@ -72,6 +67,7 @@ export async function proxy(request: NextRequest) {
     if (isPublicRoute) {
       return NextResponse.next();
     }
+
     if (isPrivateRoute) {
       return NextResponse.redirect(new URL('/sign-in', request.url));
     }
