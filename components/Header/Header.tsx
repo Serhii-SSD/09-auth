@@ -1,65 +1,65 @@
 'use client';
 
-import { useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { login } from '@/lib/api/clientApi';
 import { useAuthStore } from '@/lib/store/authStore';
+import { logout } from '@/lib/api/clientApi';
 import css from './Header.module.css';
 
-export default function SignInPage() {
+export default function Header() {
   const router = useRouter();
-  const setUser = useAuthStore((state) => state.setUser);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const { user, clearIsAuthenticated } = useAuthStore();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
+  const handleLogout = async () => {
     try {
-      const user = await login(email, password);
-      setUser(user);
-      router.push('/');
-    } catch {
-      setError('Invalid email or password');
+      await logout();
+    } finally {
+      clearIsAuthenticated();
+      router.push('/sign-in');
     }
   };
 
   return (
-    <main className={css.mainContent}>
-      <form onSubmit={handleSubmit} className={css.form}>
-        <h1 className={css.formTitle}>Sign In</h1>
-        {error && <p className={css.error}>{error}</p>}
-        <div className={css.formGroup}>
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className={css.input}
-          />
-        </div>
-        <div className={css.formGroup}>
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className={css.input}
-          />
-        </div>
-        <div className={css.actions}>
-          <button type="submit" className={css.submitButton}>
-            Sign In
-          </button>
-        </div>
-      </form>
-    </main>
+    <header className={css.header}>
+      <Link href="/" aria-label="Home">
+        NoteHub
+      </Link>
+      <nav aria-label="Main Navigation">
+        <ul className={css.navigation}>
+          <li>
+            <Link href="/">Home</Link>
+          </li>
+          {user && (
+            <>
+              <li>
+                <Link href="/notes/filter/all">Notes</Link>
+              </li>
+              <li>
+                <Link href="/profile">Profile</Link>
+              </li>
+              <li>
+                <button
+                  onClick={handleLogout}
+                  className={css.authButton}
+                  type="button"
+                >
+                  Logout
+                </button>
+              </li>
+            </>
+          )}
+          {!user && (
+            <>
+              <li>
+                <Link href="/sign-in">Sign In</Link>
+              </li>
+              <li>
+                <Link href="/sign-up">Sign Up</Link>
+              </li>
+            </>
+          )}
+        </ul>
+      </nav>
+    </header>
   );
 }
